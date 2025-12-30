@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Chat • 2025</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter var', 'system-ui', 'sans-serif'] },
+          animation: {
+            'message-in': 'messageIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+            'typing': 'typing 1.4s steps(30) infinite',
+            'blink': 'blink 0.75s step-end infinite',
+            'float': 'float 6s ease-in-out infinite'
+          },
+          keyframes: {
+            messageIn: {
+              '0%': { opacity: '0', transform: 'translateY(20px) scale(0.96)' },
+              '100%': { opacity: '1', transform: 'translateY(0) scale(1)' }
+            },
+            typing: {
+              '0%,100%': { width: '0%' },
+              '50%': { width: '100%' }
+            },
+            blink: {
+              '0%,100%': { opacity: '1' },
+              '50%': { opacity: '0' }
+            },
+            float: {
+              '0%,100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0d001a 0%, #1a0033 100%);
+      background-attachment: fixed;
+    }
+    .glass {
+      background: rgba(40, 40, 80, 0.25);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 20px 60px -15px rgba(0,0,0,0.6);
+    }
+    .input-glow {
+      box-shadow: 0 0 0 0 rgba(168, 85, 247, 0);
+      transition: box-shadow 0.4s;
+    }
+    .input-glow:focus {
+      box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.35);
+    }
+    .typing-indicator span {
+      animation: typing 1.4s steps(30) infinite, blink 0.75s step-end infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-gray-100 antialiased flex items-center justify-center p-4">
+
+  <div class="w-full max-w-2xl h-[90vh] flex flex-col rounded-3xl glass overflow-hidden shadow-2xl shadow-purple-950/40">
+
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-white/10 bg-black/20 backdrop-blur-lg flex items-center gap-4">
+      <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center font-bold text-lg shadow-lg animate-float">
+        AI
+      </div>
+      <div>
+        <h1 class="font-semibold text-lg">AskAnyThing • 2025</h1>
+        <p class="text-xs text-purple-300/80">Online • Thinking...</p>
+      </div>
+    </div>
+
+    <!-- Messages Area -->
+    <div id="chat" class="flex-1 p-6 overflow-y-auto space-y-6 scrollbar-thin scrollbar-thumb-purple-600/50 scrollbar-track-transparent">
+
+      <!-- Example messages -->
+      <div class="flex flex-col gap-1 animate-message-in">
+        <div class="self-start max-w-[82%] glass rounded-2xl rounded-tl-none px-5 py-3.5">
+          <p>Hello! How can I help you today? ✨</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-1 items-end animate-message-in" style="animation-delay: 0.3s;">
+        <div class="self-end max-w-[82%] bg-gradient-to-br from-purple-600/70 to-indigo-600/70 rounded-2xl rounded-tr-none px-5 py-3.5">
+          <p>Show me a modern AI chat UI with glassmorphism and smooth animations</p>
+        </div>
+      </div>
+
+      <!-- Typing indicator -->
+      <div class="flex items-center gap-2 animate-message-in">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex-shrink-0"></div>
+        <div class="glass rounded-full px-5 py-2.5 text-sm inline-flex items-center gap-1.5">
+          <span class="typing-indicator"><span>thinking</span></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-purple-300 animate-pulse"></span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Input Area -->
+    <div class="p-5 border-t border-white/10 bg-black/30 backdrop-blur-xl">
+      <form id="chat-form" class="relative">
+        <input
+          type="text"
+          id="user-input"
+          placeholder="Ask anything..."
+          autocomplete="off"
+          class="w-full py-4 px-6 pr-16 rounded-2xl bg-white/5 border border-white/10 focus:border-purple-500/50 text-white placeholder-gray-400 outline-none transition-all input-glow"
+        />
+        <button
+          type="submit"
+          class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 flex items-center justify-center hover:scale-105 transition-transform active:scale-95"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+          </svg>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <script>
+    // Fake message appearance animation stagger
+    document.addEventListener('DOMContentLoaded', () => {
+      const messages = document.querySelectorAll('.animate-message-in');
+      messages.forEach((msg, i) => {
+        msg.style.animationDelay = `${i * 0.2 + 0.3}s`;
+      });
+    });
+
+    // Basic chat simulation (for demo)
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('user-input');
+    const chat = document.getElementById('chat');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!input.value.trim()) return;
+
+      // User message
+      const userMsg = document.createElement('div');
+      userMsg.className = 'flex flex-col gap-1 items-end animate-message-in';
+      userMsg.innerHTML = `
+        <div class="self-end max-w-[82%] bg-gradient-to-br from-purple-600/70 to-indigo-600/70 rounded-2xl rounded-tr-none px-5 py-3.5">
+          <p>${input.value}</p>
+        </div>
+      `;
+      chat.appendChild(userMsg);
+
+      // Scroll to bottom
+      chat.scrollTop = chat.scrollHeight;
+
+      // Fake AI response after delay
+      setTimeout(() => {
+        const aiMsg = document.createElement('div');
+        aiMsg.className = 'flex flex-col gap-1 animate-message-in';
+        aiMsg.innerHTML = `
+          <div class="self-start max-w-[82%] glass rounded-2xl rounded-tl-none px-5 py-3.5">
+            <p>That's a beautiful idea! Here's a refined version with even smoother animations... ✨</p>
+          </div>
+        `;
+        chat.appendChild(aiMsg);
+        chat.scrollTop = chat.scrollHeight;
+      }, 1200);
+
+      input.value = '';
+    });
+
+    // Enter key support
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        form.dispatchEvent(new Event('submit'));
+      }
+    });
+  </script>
+</body>
+</html>
